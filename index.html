@@ -1,0 +1,564 @@
+```html
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HarmoniNews - Portal Berita Musik Terkini</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f5ff',
+                            100: '#e0ebff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#1e1b4b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-slate-950/80 border-b border-slate-800/80 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-compact-disc text-xl text-white animate-spin-slow"></i>
+                </div>
+                <div>
+                    <span class="font-heading font-extrabold text-2xl tracking-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">Harmoni<span class="text-indigo-500">.</span></span>
+                    <span class="block text-[10px] tracking-widest text-slate-400 font-semibold uppercase -mt-1">Music News Portal</span>
+                </div>
+            </a>
+
+            <!-- Search Bar (Desktop) -->
+            <div class="hidden md:flex items-center flex-1 max-w-md mx-8 relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 text-slate-400 text-sm"></i>
+                <input type="text" id="searchInput" placeholder="Cari musisi, judul berita, atau topik..." 
+                    class="w-full bg-slate-900/90 border border-slate-800 rounded-full py-2.5 pl-11 pr-4 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-3">
+                <button class="hidden sm:flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold px-4 py-2.5 rounded-full border border-slate-800 transition-colors">
+                    <i class="fa-solid fa-bell text-indigo-400"></i> Langganan
+                </button>
+                <button id="mobileSearchBtn" class="md:hidden w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-slate-300 hover:text-white">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Search Field (Expandable) -->
+        <div id="mobileSearchContainer" class="hidden md:hidden px-4 pb-4 border-b border-slate-800">
+            <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-3 text-slate-400 text-sm"></i>
+                <input type="text" id="searchInputMobile" placeholder="Cari musisi atau berita..." 
+                    class="w-full bg-slate-900 border border-slate-800 rounded-full py-2 pl-11 pr-4 text-sm text-slate-200 focus:outline-none focus:border-indigo-500">
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Hero Featured Section -->
+        <section id="heroSection" class="mb-12">
+            <!-- Will be populated dynamic hero featured item -->
+        </section>
+
+        <!-- Category Filters & Header -->
+        <section class="mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <h2 class="font-heading text-2xl font-bold text-white tracking-tight">Kabar Musisi Terbaru</h2>
+                    <p class="text-slate-400 text-sm">Update harian seputar industri musik lokal & internasional</p>
+                </div>
+                
+                <!-- Category Buttons -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none" id="categoryContainer">
+                    <button data-category="All" class="category-btn active px-4 py-2 rounded-full text-xs font-semibold transition-all bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 whitespace-nowrap">Semua</button>
+                    <button data-category="Pop" class="category-btn px-4 py-2 rounded-full text-xs font-semibold transition-all bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800 whitespace-nowrap">Pop</button>
+                    <button data-category="Rock" class="category-btn px-4 py-2 rounded-full text-xs font-semibold transition-all bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800 whitespace-nowrap">Rock</button>
+                    <button data-category="Hip-Hop" class="category-btn px-4 py-2 rounded-full text-xs font-semibold transition-all bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800 whitespace-nowrap">Hip-Hop</button>
+                    <button data-category="Indie" class="category-btn px-4 py-2 rounded-full text-xs font-semibold transition-all bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800 whitespace-nowrap">Indie</button>
+                    <button data-category="Electronic" class="category-btn px-4 py-2 rounded-full text-xs font-semibold transition-all bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800 whitespace-nowrap">Electronic</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- News Grid Grid -->
+        <section>
+            <div id="newsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamic News Cards will be injected here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden text-center py-16 bg-slate-900/50 rounded-2xl border border-slate-800/60 my-6">
+                <i class="fa-solid fa-compact-disc text-4xl text-slate-600 mb-3"></i>
+                <h3 class="text-lg font-semibold text-slate-300">Berita tidak ditemukan</h3>
+                <p class="text-slate-500 text-sm mt-1">Coba kata kunci lain atau pilih kategori yang berbeda.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Dialog for Full Article -->
+    <div id="newsModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-3xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden transform scale-95 transition-transform duration-300">
+            <!-- Modal Header / Bar -->
+            <div class="p-4 border-b border-slate-800/80 flex items-center justify-between bg-slate-900/90 sticky top-0 z-10">
+                <div class="flex items-center gap-2">
+                    <span id="modalCategory" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Category</span>
+                    <span id="modalDate" class="text-xs text-slate-400">Date</span>
+                </div>
+                <button id="closeModalBtn" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content Body -->
+            <div class="p-6 overflow-y-auto space-y-6">
+                <h1 id="modalTitle" class="font-heading text-2xl sm:text-3xl font-bold text-white leading-tight">Title Goes Here</h1>
+                
+                <!-- Author & Artist Info -->
+                <div class="flex items-center justify-between border-y border-slate-800/80 py-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-indigo-600/30 flex items-center justify-center text-indigo-400 font-bold border border-indigo-500/30" id="artistAvatar">
+                            M
+                        </div>
+                        <div>
+                            <p id="modalArtist" class="text-sm font-semibold text-slate-200">Musisi Target</p>
+                            <p class="text-xs text-slate-400">Dilaporkan oleh Redaksi Harmoni</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="shareArticle()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-indigo-600 text-slate-300 hover:text-white flex items-center justify-center text-xs transition-colors" title="Bagikan">
+                            <i class="fa-solid fa-share-nodes"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Featured Image -->
+                <div class="rounded-xl overflow-hidden shadow-lg aspect-video w-full bg-slate-800 relative">
+                    <img id="modalImage" src="" alt="" class="w-full h-full object-cover">
+                </div>
+
+                <!-- Article Script / Text -->
+                <div id="modalScript" class="prose prose-invert max-w-none text-slate-300 leading-relaxed text-base space-y-4">
+                    <!-- Dynamic Text Paragraphs -->
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 border-t border-slate-800/80 bg-slate-900/90 flex justify-between items-center text-xs text-slate-400">
+                <span>© 2026 Harmoni Music News. Hak cipta dilindungi.</span>
+                <button id="closeModalBottomBtn" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-colors">Tutup Artikel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800 mt-16 text-slate-400 text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="space-y-3 md:col-span-2">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-compact-disc text-xl text-indigo-500"></i>
+                    <span class="font-heading font-extrabold text-xl text-white">Harmoni<span class="text-indigo-500">.</span></span>
+                </div>
+                <p class="text-slate-400 max-w-sm text-xs leading-relaxed">
+                    Portal berita musik terpercaya menyajikan kabar terbaru seputar album, tur konser, wawancara eksklusif, dan tren industri musik terkini dari penjuru dunia.
+                </p>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold mb-3 text-xs uppercase tracking-wider">Kategori Berita</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="#" class="hover:text-indigo-400 transition-colors">Pop & R&B</a></li>
+                    <li><a href="#" class="hover:text-indigo-400 transition-colors">Rock & Metal</a></li>
+                    <li><a href="#" class="hover:text-indigo-400 transition-colors">Hip-Hop & Rap</a></li>
+                    <li><a href="#" class="hover:text-indigo-400 transition-colors">Indie & Alternative</a></li>
+                    <li><a href="#" class="hover:text-indigo-400 transition-colors">EDM & Electronic</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold mb-3 text-xs uppercase tracking-wider">Ikuti Kami</h4>
+                <div class="flex gap-3 text-lg">
+                    <a href="#" class="w-9 h-9 rounded-full bg-slate-900 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="w-9 h-9 rounded-full bg-slate-900 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-colors"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" class="w-9 h-9 rounded-full bg-slate-900 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-colors"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#" class="w-9 h-9 rounded-full bg-slate-900 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-colors"><i class="fa-brands fa-spotify"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-slate-900 py-6 text-center text-xs text-slate-600">
+            &copy; 2026 Harmoni Media Utama. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- JavaScript Data and Logic -->
+    <script>
+        // Sample News Data (Music News Articles)
+        const musicNews = [
+            {
+                id: 1,
+                title: "Taylor Swift Umumkan Album Studio Terbaru Saat Penutupan Rekor Tur Dunianya",
+                artist: "Taylor Swift",
+                category: "Pop",
+                date: "6 November 2026",
+                featured: true,
+                image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1200&q=80",
+                summary: "Bintang musik pop global Taylor Swift memberikan kejutan besar bagi para penggemar dengan mengumumkan album terbarunya usai merampungkan tur stadionnya.",
+                script: [
+                    "JAKARTA - Penyanyi dan penulis lagu papan atas dunia, Taylor Swift, kembali membuat gempar industri musik global. Pada penutupan tur dunianya yang bersejarah, ia secara mengejutkan mengumumkan kehadiran album studio terbarunya yang dijadwalkan rilis awal tahun depan.",
+                    "Pengumuman tersebut disambut riuh histeris oleh puluhan ribu penonton yang memenuhi stadion. Menurut Swift, karya terbaru ini ditulis di sela-sela kesibukannya menjalani jadwal tur yang padat dalam dua tahun terakhir.",
+                    " Album ini terasa sangat personal dan merefleksikan banyak emosi yang saya rasakan di balik panggung selama menyapa jutaan penggemar, ujar Swift saat menyampaikan pengumuman di atas panggung.",
+                    "Para pengamat musik memprediksi bahwa peluncuran album baru ini akan kembali memecahkan berbagai rekor streaming di platform digital serta mendominasi tangga lagu dunia."
+                ]
+            },
+            {
+                id: 2,
+                title: "Arctic Monkeys Kembali ke Studio: Eksperimen Sound Baru dan Album Konseptual",
+                artist: "Alex Turner / Arctic Monkeys",
+                category: "Rock",
+                date: "5 November 2026",
+                featured: false,
+                image: "https://images.unsplash.com/photo-1598387993441-a364f854c3e1?auto=format&fit=crop&w=800&q=80",
+                summary: "Band rock asal Sheffield ini dilaporkan telah berkumpul kembali di studio rekaman London untuk menggarap suksesor dari album The Car.",
+                script: [
+                    "LONDON - Kabar gembira datang bagi para pecinta musik indie rock. Band ikonik asal Inggris, Arctic Monkeys, dikabarkan telah aktif kembali di studio rekaman untuk menggarap materi album kedelapan mereka.",
+                    "Sang vokalis, Alex Turner, dalam wawancara singkat mengungkapkan bahwa mereka sedang mengeksplorasi kombinasi instrumen analog tua dengan ritme vintage yang hangat.",
+                    "Kami tidak pernah ingin mengulang formula yang sama. Setiap album harus menjadi babak baru yang menantang rasa nyaman kami sebagai musisi, jelas Turner.",
+                    "Proses penggarapan dikabarkan sudah berjalan 50 persen, dan beberapa lagu diproyeksikan akan diperdengarkan pertama kali pada festival musim panas mendatang."
+                ]
+            },
+            {
+                id: 3,
+                title: "Kendrick Lamar Merajai Tangga Lagu dengan Single Kejutan Bernuansa Jazz-Rap",
+                artist: "Kendrick Lamar",
+                category: "Hip-Hop",
+                date: "4 November 2026",
+                featured: false,
+                image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=800&q=80",
+                summary: "Rapper peraih piala Pulitzer ini mengejutkan publik dengan merilis single baru yang sarat pesan sosial dan aransemen instrumen tiup yang memukau.",
+                script: [
+                    "LOS ANGELES - Kendrick Lamar kembali membuktikan legitimasinya sebagai salah satu maestro hip-hop terbesar era ini. Tanpa pengumuman atau teaser terlebih dahulu, ia mendadak melepas single terbarunya di platform streaming.",
+                    "Lagu berdurasi 6 menit tersebut menampilkan lirik poetik nan tajam yang menyoroti dinamika sosial urban, dibalut aransemen jazz-rap organik dengan dominasi terompet dan saxophone yang kompleks.",
+                    "Kritikus musik memberikan pujian mutlak terhadap produksi lagu tersebut. Single ini dinilai berhasil menggabungkan kedalaman narasi dengan musikalitas kelas tinggi yang jarang ditemui di arus utama."
+                ]
+            },
+            {
+                id: 4,
+                title: "Phenomena Indie: Hindia Rilis Mini Album Eksperimental Bertajuk 'Ruang Jiwa'",
+                artist: "Hindia (Baskara Putra)",
+                category: "Indie",
+                date: "3 November 2026",
+                featured: false,
+                image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80",
+                summary: "Solois Baskara Putra (Hindia) meluncurkan proyek mini album berisi 5 lagu yang mengeksplorasi tema kesehatan mental dan kedewasaan.",
+                script: [
+                    "JAKARTA - Solois kondang tanah air, Baskara Putra atau yang populer dengan nama panggung Hindia, resmi meluncurkan EP (mini album) terbaru bertajuk 'Ruang Jiwa'.",
+                    "Dalam karya terbarunya ini, Hindia menawarkan nuansa musik yang lebih intim dengan dominasi synth melankolis dan lirik lugas yang relevan dengan dinamika kehidupan generasi muda.",
+                    "Proyek ini merupakan bentuk katarsis pribadi saya atas situasi yang terjadi belakangan ini. Semoga lagu-lagu ini bisa menjadi teman bagi mereka yang sedang merasa terasing, ungkap Baskara dalam siaran persnya."
+                ]
+            },
+            {
+                id: 5,
+                title: "Daft Punk Menggelar Kolaborasi Spesial Peringatan 25 Tahun Album 'Discovery'",
+                artist: "Daft Punk",
+                category: "Electronic",
+                date: "2 November 2026",
+                featured: false,
+                image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80",
+                summary: "Meskipun telah berpisah, duo produser musik elektronik legendaris Daft Punk menyiapkan rilis ulang remaster dan footage konser yang belum pernah dipublikasikan.",
+                script: [
+                    "PARIS - Kabar berhembus dari ranah musik elektronik. Untuk memperingati 25 tahun dirilisnya album fenomenal 'Discovery', pihak manajemen Daft Punk mengumumkan proyek remastering audio definisi tinggi.",
+                    "Selain pembaruan audio, rilis ulang ini juga akan menyertakan beberapa lagu unreleased dari arsip studio tahun 2001 serta dokumenter pendek mengenai proses pembuatan helm ikonik mereka.",
+                    "Meskipun Thomas Bangalter dan Guy-Manuel de Homem-Christo tidak bersatu kembali secara fisik, perayaan ini didedikasikan penuh untuk memberikan penghormatan kepada para penggemar setia di seluruh dunia."
+                ]
+            },
+            {
+                id: 6,
+                title: "Billie Eilish Meraih Penghargaan Producer of the Year di Gala Musik Internasional",
+                artist: "Billie Eilish & Finneas",
+                category: "Pop",
+                date: "1 November 2026",
+                featured: false,
+                image: "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&w=800&q=80",
+                summary: "Penyanyi muda Billie Eilish bersama sang kakak Finneas kembali membawa pulang trofi bergengsi berkat inovasi tata suara pada album terkini mereka.",
+                script: [
+                    "LOS ANGELES - Kombinasi kakak-beradik Billie Eilish dan Finneas O'Connell kembali membuktikan dominasi mereka. Dalam ajang penghargaan musik bergengsi semalam, keduanya dianugerahi trofi 'Best Music Production'.",
+                    "Penghargaan tersebut diberikan atas keberanian mereka memadukan efek vokal bisikan (whisper vocals) yang khas dengan bass frekuensi rendah yang inovatif.",
+                    "Kami selalu merekam musik dari kamar rumah sederhana kami, dan penghargaan ini membuktikan bahwa dedikasi serta kejujuran dalam berkarya akan selalu menemukan jalannya, tutur Billie dalam pidato kemenangannya."
+                ]
+            }
+        ];
+
+        // State Management
+        let currentCategory = 'All';
+        let searchQuery = '';
+
+        // DOM Elements
+        const newsGrid = document.getElementById('newsGrid');
+        const heroSection = document.getElementById('heroSection');
+        const emptyState = document.getElementById('emptyState');
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        const searchInput = document.getElementById('searchInput');
+        const searchInputMobile = document.getElementById('searchInputMobile');
+        const mobileSearchBtn = document.getElementById('mobileSearchBtn');
+        const mobileSearchContainer = document.getElementById('mobileSearchContainer');
+
+        // Modal Elements
+        const newsModal = document.getElementById('newsModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const closeModalBottomBtn = document.getElementById('closeModalBottomBtn');
+        const modalCategory = document.getElementById('modalCategory');
+        const modalDate = document.getElementById('modalDate');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalArtist = document.getElementById('modalArtist');
+        const modalImage = document.getElementById('modalImage');
+        const modalScript = document.getElementById('modalScript');
+        const artistAvatar = document.getElementById('artistAvatar');
+
+        // Initialize App
+        window.onload = function() {
+            renderHero();
+            renderNews();
+            setupEventListeners();
+        };
+
+        // Render Hero Featured Article
+        function renderHero() {
+            const featuredArticle = musicNews.find(item => item.featured) || musicNews[0];
+            if (!featuredArticle) return;
+
+            heroSection.innerHTML = `
+                <div class="relative rounded-3xl overflow-hidden bg-slate-900 border border-slate-800 shadow-2xl group">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[420px]">
+                        <!-- Image Container -->
+                        <div class="lg:col-span-7 relative overflow-hidden h-64 sm:h-80 lg:h-full">
+                            <img src="${featuredArticle.image}" alt="${featuredArticle.title}" 
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-slate-950 via-slate-950/40 to-transparent"></div>
+                            <span class="absolute top-4 left-4 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                                <i class="fa-solid fa-star mr-1"></i> Utama
+                            </span>
+                        </div>
+                        
+                        <!-- Text Content -->
+                        <div class="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-slate-900/90">
+                            <div>
+                                <div class="flex items-center gap-2 mb-3">
+                                    <span class="text-indigo-400 text-xs font-bold uppercase tracking-wider">${featuredArticle.category}</span>
+                                    <span class="text-slate-500 text-xs">•</span>
+                                    <span class="text-slate-400 text-xs">${featuredArticle.date}</span>
+                                </div>
+                                <h1 class="font-heading text-xl sm:text-2xl lg:text-3xl font-extrabold text-white leading-tight mb-3 group-hover:text-indigo-300 transition-colors">
+                                    ${featuredArticle.title}
+                                </h1>
+                                <p class="text-slate-400 text-sm line-clamp-3 mb-6 leading-relaxed">
+                                    ${featuredArticle.summary}
+                                </p>
+                            </div>
+                            <div class="flex items-center justify-between border-t border-slate-800 pt-4 mt-4">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-user-ninja text-indigo-400 text-sm"></i>
+                                    <span class="text-xs font-semibold text-slate-300">${featuredArticle.artist}</span>
+                                </div>
+                                <button onclick="openModal(${featuredArticle.id})" 
+                                    class="inline-flex items-center gap-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 px-4 py-2.5 rounded-full transition-all shadow-md shadow-indigo-600/20">
+                                    Baca Selengkapnya <i class="fa-solid fa-arrow-right text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render Cards Grid
+        function renderNews() {
+            newsGrid.innerHTML = '';
+
+            // Filter logic
+            const filteredNews = musicNews.filter(article => {
+                const matchesCategory = currentCategory === 'All' || article.category.toLowerCase() === currentCategory.toLowerCase();
+                const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                      article.artist.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                      article.summary.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filteredNews.length === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                
+                filteredNews.forEach(article => {
+                    const card = document.createElement('article');
+                    card.className = "bg-slate-900 border border-slate-800/80 rounded-2xl overflow-hidden hover:border-slate-700 transition-all duration-300 flex flex-col hover:-translate-y-1 shadow-lg group";
+                    
+                    card.innerHTML = `
+                        <div class="relative aspect-[16/10] overflow-hidden bg-slate-800">
+                            <img src="${article.image}" alt="${article.title}" 
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                            <span class="absolute top-3 left-3 bg-slate-950/80 backdrop-blur-md text-indigo-400 border border-indigo-500/30 text-[11px] font-bold px-2.5 py-1 rounded-md">
+                                ${article.category}
+                            </span>
+                        </div>
+                        
+                        <div class="p-5 flex flex-col flex-grow justify-between">
+                            <div>
+                                <div class="flex items-center gap-2 text-xs text-slate-400 mb-2">
+                                    <i class="fa-regular fa-calendar text-indigo-400"></i>
+                                    <span>${article.date}</span>
+                                </div>
+                                <h3 class="font-heading font-bold text-lg text-white group-hover:text-indigo-400 transition-colors line-clamp-2 leading-snug mb-2">
+                                    ${article.title}
+                                </h3>
+                                <p class="text-slate-400 text-xs line-clamp-3 leading-relaxed mb-4">
+                                    ${article.summary}
+                                </p>
+                            </div>
+
+                            <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between">
+                                <span class="text-xs font-semibold text-slate-300 truncate max-w-[150px]">
+                                    <i class="fa-solid fa-microphone text-slate-500 mr-1"></i> ${article.artist}
+                                </span>
+                                <button onclick="openModal(${article.id})" 
+                                    class="text-xs font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                                    Baca <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    newsGrid.appendChild(card);
+                });
+            }
+        }
+
+        // Setup Event Listeners
+        function setupEventListeners() {
+            // Category Filter Click
+            categoryButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    categoryButtons.forEach(b => {
+                        b.classList.remove('bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/30');
+                        b.classList.add('bg-slate-900', 'text-slate-300', 'border', 'border-slate-800');
+                    });
+
+                    e.target.classList.remove('bg-slate-900', 'text-slate-300', 'border', 'border-slate-800');
+                    e.target.classList.add('bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/30');
+
+                    currentCategory = e.target.getAttribute('data-category');
+                    renderNews();
+                });
+            });
+
+            // Search Functionality
+            searchInput.addEventListener('input', (e) => {
+                searchQuery = e.target.value;
+                renderNews();
+            });
+
+            searchInputMobile.addEventListener('input', (e) => {
+                searchQuery = e.target.value;
+                renderNews();
+            });
+
+            // Mobile Search Toggle
+            mobileSearchBtn.addEventListener('click', () => {
+                mobileSearchContainer.classList.toggle('hidden');
+            });
+
+            // Modal Close Listeners
+            closeModalBtn.addEventListener('click', closeModal);
+            closeModalBottomBtn.addEventListener('click', closeModal);
+            newsModal.addEventListener('click', (e) => {
+                if (e.target === newsModal) closeModal();
+            });
+
+            // ESC key to close modal
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeModal();
+            });
+        }
+
+        // Open Modal Function
+        function openModal(articleId) {
+            const article = musicNews.find(item => item.id === articleId);
+            if (!article) return;
+
+            modalCategory.innerText = article.category;
+            modalDate.innerText = article.date;
+            modalTitle.innerText = article.title;
+            modalArtist.innerText = article.artist;
+            modalImage.src = article.image;
+            modalImage.alt = article.title;
+            artistAvatar.innerText = article.artist.charAt(0);
+
+            // Format Script Text Paragraphs
+            modalScript.innerHTML = article.script.map(paragraph => `<p>${paragraph}</p>`).join('');
+
+            // Show Modal with Animation
+            newsModal.classList.remove('opacity-0', 'pointer-events-none');
+            newsModal.querySelector('div').classList.remove('scale-95');
+            newsModal.querySelector('div').classList.add('scale-100');
+            document.body.style.overflow = 'hidden'; // Prevent background scroll
+        }
+
+        // Close Modal Function
+        function closeModal() {
+            newsModal.classList.add('opacity-0', 'pointer-events-none');
+            newsModal.querySelector('div').classList.remove('scale-100');
+            newsModal.querySelector('div').classList.add('scale-95');
+            document.body.style.overflow = 'auto'; // Restore background scroll
+        }
+
+        // Helper Share Function
+        function shareArticle() {
+            const text = `Baca artikel musik menarik: ${modalTitle.innerText}`;
+            if (navigator.clipboard) {
+                document.execCommand('copy');
+                alert("Tautan artikel berhasil disalin!");
+            }
+        }
+    </script>
+</body>
+</html>
+```
